@@ -4,8 +4,15 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 import google.generativeai as genai
 
+# 🔥 ENV VARIABLES (Render se aayenge)
 TOKEN = os.getenv("8968685727:AAEs9ViZlOpknZOGpMpZO-wiWfaieRubDFw")
 GEMINI_API = os.getenv("AIzaSyDTx796TfXOuOyFspuZcLh8o3i6_j9S0II")
+
+# ❌ Safety check (agar missing ho to crash clearly batayega)
+if not TOKEN:
+    raise Exception("BOT_TOKEN missing in environment")
+if not GEMINI_API:
+    raise Exception("GEMINI_API_KEY missing in environment")
 
 genai.configure(api_key=GEMINI_API)
 
@@ -34,17 +41,19 @@ async def handle_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     response = model.generate_content([
         uploaded,
-        "Give summary, key points, sentiment, action items"
+        "Give summary, key points, sentiment and action items"
     ])
 
     await update.message.reply_text(response.text)
 
 app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(MessageHandler(
-    filters.VOICE | filters.AUDIO | filters.Document.ALL,
-    handle_audio
-))
+app.add_handler(
+    MessageHandler(
+        filters.VOICE | filters.AUDIO | filters.Document.ALL,
+        handle_audio
+    )
+)
 
 print("Bot Running...")
 app.run_polling()
