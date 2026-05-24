@@ -5,9 +5,9 @@ import os
 
 TOKEN = os.getenv("
 8968685727:AAEs9ViZlOpknZOGpMpZO-wiWfaieRubDFw")
-GEMINI_API = os.getenv("AIzaSyDTx796TfXOuOyFspuZcLh8o3i6_j9S0II")
+GEMINI_API = os.getenv("GEMINI_API")
 
-genai.configure(api_key=GEMINI_API)
+genai.configure(AIzaSyDTx796TfXOuOyFspuZcLh8o3i6_j9S0II)
 
 async def handle_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -38,14 +38,14 @@ async def handle_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response = model.generate_content([
         uploaded_file,
         """
-        Analyze this call recording.
+Analyze this call recording.
 
-        Give:
-        - Summary
-        - Important Points
-        - Sentiment
-        - Action Required
-        """
+Give:
+- Summary
+- Important Points
+- Sentiment
+- Action Required
+"""
     ])
 
     await update.message.reply_text(response.text)
